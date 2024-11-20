@@ -6,6 +6,8 @@ export interface Employee {
   bonus: number;
   insurance: number;
   tax: number;
+  month: string;
+  status: 'pending' | 'paid'; // 新增发薪状态字段
 }
 
 export interface SalaryReport {

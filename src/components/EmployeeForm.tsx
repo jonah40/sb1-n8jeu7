@@ -10,18 +10,20 @@ interface Props {
 }
 
 export default function EmployeeForm({ employee, onSave, onClose }: Props) {
-  const [form, setForm] = useState<Omit<Employee, 'id'>>({
+  const [form, setForm] = useState<Omit<Employee, 'id' | 'status'>>({
     name: '',
     position: '',
     baseSalary: 0,
     bonus: 0,
     insurance: 0,
     tax: 0,
+    month: new Date().toISOString().slice(0, 7),
   });
 
   useEffect(() => {
     if (employee) {
-      setForm(employee);
+      const { id, status, ...rest } = employee;
+      setForm(rest);
     }
   }, [employee]);
 
@@ -37,6 +39,7 @@ export default function EmployeeForm({ employee, onSave, onClose }: Props) {
       ...form,
       tax: calculatedTax,
       insurance: calculatedInsurance,
+      status: employee?.status || 'pending', // 新建员工默认为待发放状态
     });
   };
 
@@ -85,6 +88,18 @@ export default function EmployeeForm({ employee, onSave, onClose }: Props) {
               required
               minLength={2}
               maxLength={50}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              发薪月份
+            </label>
+            <input
+              type="month"
+              value={form.month}
+              onChange={(e) => setForm({ ...form, month: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
           <div>
